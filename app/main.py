@@ -1,12 +1,43 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from pydantic import BaseModel
+# from tortoise import Tortoise
+
+
+app = FastAPI()
+
+# main_app_lifespan = app.router.lifespan_context
+
+# @asynccontextmanager
+# async def lifespan_wrapper(app):
+#     print("startup")
+#     async with main_app_lifespan(app) as maybe_state:
+#         yield maybe_state
+#     print("shutdown")
 
 class Item(BaseModel):
     name: str
     price: float
 
-app = FastAPI()
 
+
+# # Function to be executed during startup
+# def startup_event():
+#     print("Initializing objects...")
+#     # Your initialization code here
+
+
+# @app.on_event("startup")
+# async def startup():
+#     startup_event()
+
+# searchengine = pineconeSearch()
+
+
+@app.get("/search")
+async def search(query:str):
+    pass
+    
+    
 @app.get("/")
 async def read_iteam():
     return {"message": "Welcome to omaai"}
