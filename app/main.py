@@ -1,46 +1,36 @@
+from pydantic import BaseModel
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
-# from tortoise import Tortoise
+from fastapi import FastAPI, Request,Query
+from app.pinecone_search import pineconeSearch
+from app.Document import Document
+from typing import List
 
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    global searchengine
+    searchengine = pineconeSearch()
+    yield
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
-# main_app_lifespan = app.router.lifespan_context
-
-# @asynccontextmanager
-# async def lifespan_wrapper(app):
-#     print("startup")
-#     async with main_app_lifespan(app) as maybe_state:
-#         yield maybe_state
-#     print("shutdown")
+@app.get("/search")
+async def search(query: str = Query(..., min_length=1)) -> List[Document]:
+    if searchengine is None:
+        raise ValueError("Search engine not initialized")
+    else:
+        print("find searchengine")
+        return searchengine.search(query)
+    
 
 class Item(BaseModel):
     name: str
     price: float
 
-
-
-# # Function to be executed during startup
-# def startup_event():
-#     print("Initializing objects...")
-#     # Your initialization code here
-
-
-# @app.on_event("startup")
-# async def startup():
-#     startup_event()
-
-# searchengine = pineconeSearch()
-
-
-@app.get("/search")
-async def search(query:str):
-    pass
-    
-    
 @app.get("/")
-async def read_iteam():
-    return {"message": "Welcome to omaai"}
+async def root(request: Request):
+    return {"message": "this is the root"}
+    # return {"secret": request.app.state.super_secret}
+
 
 @app.get("/hello/{name}")
 async def read_item(name):

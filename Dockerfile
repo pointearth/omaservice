@@ -1,5 +1,5 @@
 # Choose our version of Python
-From python:3.10.12
+From python:3.11.6
 
 # Set up a working directory
 WORKDIR /code
@@ -8,10 +8,11 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 
 # Intall the dependencies from the requirements file
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+RUN pip install -r /code/requirements.txt
 
 # Copy the code into the working directory
 COPY ./app /code/app
+COPY ./data /code/data
 
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

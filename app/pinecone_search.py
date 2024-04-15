@@ -3,7 +3,7 @@ from pinecone_text.sparse import BM25Encoder
 from pinecone import ServerlessSpec
 import time
 import sys,os
-from corpus_processor import CorpusProcessor
+from app.corpus_processor import CorpusProcessor
 from typing import List
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.retrievers import PineconeHybridSearchRetriever
@@ -14,15 +14,17 @@ class pineconeSearch:
     CORPUS_FILE_PATH = "data/bm25_values.json"
     def __init__(self) -> None:
         # 1 load index, encoder, model
+        print("*********************INIT-INFO******************************************")
+        print(f"*********load index '{self.INDEX_NAME}'...")
         self.index = self.load_index(self.INDEX_NAME)
         
         if os.path.exists(self.CORPUS_FILE_PATH): 
             self.bm25encoder = self.load_bm25encoder(self.CORPUS_FILE_PATH)
             self.retriever = self.load_retriever(self.bm25encoder, self.MODEL_NAME)
+            print(f"*********load index '{self.INDEX_NAME}' successful!*********")
         else:
             print(f"corpus doesn't exits, need to create it {self.CORPUS_FILE_PATH}")
-
-        print("*********************initialized*********************")
+        print("****************Initialized Completed*******************************")
         
 
     def load_index(self, index_name:str):
@@ -35,13 +37,12 @@ class pineconeSearch:
             time.sleep(1)
 
         index_info = pc.describe_index(index_name)
-        print("*********************INDEX-INFO******************************************")
+        print("***------------***INDEX-INFO***------------****")
         print(index_info)
         index = pc.Index(index_name)
         # view index stats
         status_info = index.describe_index_stats()
         print(status_info)
-        print("*********************INFO-END******************************************")
         return index
 
     # it is unnecessary, leave it temporary
@@ -49,7 +50,6 @@ class pineconeSearch:
         return self.bm25encoder.encode_queries(query)
 
     def load_bm25encoder(self, corpus_file_path:str):
-        processor = CorpusProcessor()
         # Initialize BM25 from a corpus file
         bm25_encoder = BM25Encoder()
         bm25_encoder.load(corpus_file_path)

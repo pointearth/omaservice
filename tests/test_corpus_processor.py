@@ -1,5 +1,5 @@
 import unittest
-from corpus_processor import CorpusProcessor
+from app.corpus_processor import CorpusProcessor
 
 class TestCorpusProcessor(unittest.TestCase):
     def setUp(self):

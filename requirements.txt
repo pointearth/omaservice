@@ -2,19 +2,10 @@ fastapi==0.110.0
 pydantic==2.6.4
 uvicorn==0.28.0
 
-mlflow==2.8.1
-cloudpickle==2.0.0
-configparser==5.2.0
 numpy==1.23.5
 packaging==23.2
-psutil==5.9.0
-pyyaml==6.0
-# scikit-learn==1.1.1
-scipy==1.10.0
-# transformers== 4.39.3
 sentence-transformers==2.6.1
 pinecone-client==3.2.2
-pinecone-text==0.9.0
+pinecone_text==0.9.0
 nltk==3.8.1
 langchain_community== 0.0.32
-tortoise
